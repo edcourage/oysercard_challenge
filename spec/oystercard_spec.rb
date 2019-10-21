@@ -14,5 +14,10 @@ describe Oystercard do
       oystercard.top_up(5)
       expect(oystercard.balance).to eq 15
     end
+
+    it "is error raise if top_up argument pushes balance over £90" do
+      oystercard.top_up(Oystercard::CARD_LIMIT)
+      expect { oystercard.top_up(1) }.to raise_error "Maxed out! limit is #{Oystercard::CARD_LIMIT}"
+    end
   end
 end
