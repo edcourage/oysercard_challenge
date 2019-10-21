@@ -9,14 +9,16 @@ class Oystercard
   def top_up(amount)
     raise "Maxed out! limit is #{CARD_LIMIT}" if maxed?(amount)
     @balance += amount
-
   end
 
+  def deduct(amount)
+    @balance -= amount
+  end
 
   private
 
   def maxed?(amount)
-    @balance + amount > CARD_LIMIT 
+    @balance + amount > CARD_LIMIT
   end
 
 end
