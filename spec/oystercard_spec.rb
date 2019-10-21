@@ -32,8 +32,13 @@ describe Oystercard do
 
   describe '#touch_in' do
     it 'registers card is in_journey?' do
+      oystercard.top_up(1)
       oystercard.touch_in
       expect(oystercard).to be_in_journey
+    end
+
+    it 'expect error if balance is below £1' do
+      expect { oystercard.touch_in }.to raise_error "skint bruv!"
     end
   end
 

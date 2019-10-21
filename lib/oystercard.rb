@@ -1,5 +1,6 @@
 class Oystercard
   CARD_LIMIT = 90
+  MIN_BALANCE = 1
   attr_reader :balance
 
   def initialize
@@ -21,6 +22,7 @@ class Oystercard
   end
 
  def touch_in
+   raise "skint bruv!" if skint?
    @in_use = true
  end
 
@@ -32,6 +34,10 @@ class Oystercard
 
  def maxed?(amount)
    @balance + amount > CARD_LIMIT
+ end
+
+ def skint?
+   @balance < MIN_BALANCE
  end
 
 end
