@@ -1,7 +1,7 @@
 class Oystercard
   CARD_LIMIT = 90
   MIN_BALANCE = 1
-  attr_reader :balance
+  attr_reader :balance, :entry_station
 
   def initialize
     @balance = 0
@@ -18,16 +18,19 @@ class Oystercard
   end
 
   def in_journey?
-    @in_use
+    @entry_station != nil
   end
 
- def touch_in
+ def touch_in(station)
    raise "skint bruv!" if skint?
    @in_use = true
+   @entry_station = station
  end
 
  def touch_out
    @in_use = false
+   deduct(MIN_BALANCE)
+   @entry_station = nil
  end
 
  private
@@ -38,6 +41,10 @@ class Oystercard
 
  def skint?
    @balance < MIN_BALANCE
+ end
+
+ def deduct(amount)
+   @balance -= amount
  end
 
 end

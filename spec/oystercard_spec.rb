@@ -1,6 +1,7 @@
 require 'oystercard'
 
 describe Oystercard do
+  let(:station) { double("station") }
   subject(:oystercard) { described_class.new }
   context 'when card is intialized,' do
     it 'instance of card is expected to have default balance of 0' do
@@ -23,22 +24,22 @@ describe Oystercard do
     end
   end
 
-  describe '#deduct' do
-    it 'takes money off card' do
-      oystercard.top_up(10)
-      expect{ oystercard.deduct 5 }.to change{ oystercard.balance}.by -5
-    end
-  end
-
   describe '#touch_in' do
     it 'registers card is in_journey?' do
       oystercard.top_up(1)
-      oystercard.touch_in
+      oystercard.touch_in(station)
       expect(oystercard).to be_in_journey
     end
 
     it 'expect error if balance is below £1' do
-      expect { oystercard.touch_in }.to raise_error "skint bruv!"
+      expect { oystercard.touch_in(station) }.to raise_error "skint bruv!"
+    end
+
+    it "does oystercard know the station it has been touched in?" do
+
+      oystercard.top_up(1)
+      expect { oystercard.touch_in(station) }.to change{ oystercard.entry_station }.to eq station
+
     end
   end
 
@@ -46,6 +47,19 @@ describe Oystercard do
     it 'registers card is no longer in_journey?' do
       oystercard.touch_out
       expect(oystercard).not_to be_in_journey
+    end
+
+    it "checks £1 is taken of card when touching out" do
+      oystercard.top_up(10)
+      oystercard.touch_in(station)
+      expect { oystercard.touch_out }.to change{ oystercard.balance }.by(-1)
+    end
+
+    it "forgets entry station once touched out." do
+      oystercard.top_up(10)
+      oystercard.touch_in(station)
+      expect { oystercard.touch_out }.to change{ oystercard.entry_station }.to eq nil
+
     end
   end
 
