@@ -1,11 +1,11 @@
 class Oystercard
   CARD_LIMIT = 90
   MIN_BALANCE = 1
-  attr_reader :balance, :entry_station, :journey_log
+  attr_reader :balance, :journey, :journey_log
 
   def initialize
     @balance = 0
-    @in_use = false
+    @journey = {}
     @journey_log = []
   end
 
@@ -19,20 +19,23 @@ class Oystercard
   end
 
   def in_journey?
-    @entry_station != nil
+    @journey != {}
   end
 
  def touch_in(station)
    raise "skint bruv!" if skint?
-   @in_use = true
-   @entry_station = station
+
+   @journey = {entry_station: station, exit_station: nil}
+
+
  end
 
  def touch_out(station)
-   @in_use = false
+
    deduct(MIN_BALANCE)
    save_journey(station)
-   @entry_station = nil
+   reset_journey
+
  end
 
  private
@@ -50,7 +53,12 @@ class Oystercard
  end
 
  def save_journey(station)
-   @journey_log << {touch_in: @entry_station, touch_out: station}
+   @journey[:exit_station] = station
+   @journey_log << @journey
+ end
+
+ def reset_journey
+   @journey = {}
  end
 
 end

@@ -47,7 +47,7 @@ describe Oystercard do
     it "does oystercard know the station it has been touched in?" do
 
       oystercard.top_up(1)
-      expect { oystercard.touch_in(liverpool_street_station) }.to change{ oystercard.entry_station }.to eq liverpool_street_station
+      expect { oystercard.touch_in(liverpool_street_station) }.to change{ oystercard.journey[:entry_station] }.to eq liverpool_street_station
 
     end
   end
@@ -68,7 +68,7 @@ describe Oystercard do
     it "forgets entry station once touched out." do
       oystercard.top_up(10)
       oystercard.touch_in(liverpool_street_station)
-      expect { oystercard.touch_out(holland_park_station) }.to change{ oystercard.entry_station }.to eq nil
+      expect { oystercard.touch_out(holland_park_station) }.to change{ oystercard.journey[:entry_station] }.to eq nil
     end
 
 
@@ -77,11 +77,7 @@ describe Oystercard do
       oystercard.top_up(10)
       oystercard.touch_in(liverpool_street_station)
       oystercard.touch_out(holland_park_station)
-      expected_array = [{touch_in: liverpool_street_station, touch_out: holland_park_station}]
-
-
-
-
+      expected_array = [{entry_station: liverpool_street_station, exit_station: holland_park_station}]
       expect(oystercard.journey_log).to eq expected_array
 
     end
