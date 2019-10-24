@@ -11,6 +11,7 @@ class Oystercard
 
   def top_up(amount)
     raise "Maxed out! limit is #{CARD_LIMIT}" if maxed?(amount)
+
     @balance += amount
   end
 
@@ -26,8 +27,6 @@ class Oystercard
    raise "skint bruv!" if skint?
 
    @journey = {entry_station: station, exit_station: nil}
-
-
  end
 
  def touch_out(station)
